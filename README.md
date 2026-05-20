@@ -1,4 +1,5 @@
-# House Prices — Advanced Regression Techniques
+# Série: Previsão de Preços de Imóveis
+# 1. Construção do Modelo Base — Regressão com LightGBM
 
 Solução para a competição [House Prices - Advanced Regression Techniques](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques) do Kaggle.
 
