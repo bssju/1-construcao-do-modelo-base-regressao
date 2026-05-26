@@ -19,7 +19,7 @@ Solução para a competição [House Prices - Advanced Regression Techniques](ht
 
 ```
 house-prices-kaggle/
-├── house_prices_julianaburato.ipynb
+├── previsao_precos_imoveis_modelo_base.ipynb
 ├── README.md
 └── submission.csv
 ```
@@ -61,10 +61,12 @@ Variáveis com hierarquia natural mapeadas para inteiros preservando a ordem qua
 |---|---|---|
 | `TotalSF` | `TotalBsmtSF + 1stFlrSF + 2ndFlrSF` | Compradores avaliam área total |
 | `TotalBath` | `FullBath + 0.5×HalfBath + BsmtFullBath + 0.5×BsmtHalfBath` | Convenção do mercado imobiliário |
+| `TotalPorchSF` | Soma de todas as áreas de varanda | Área externa valoriza o imóvel |
 | `HouseAge` | `YrSold − YearBuilt` | Captura depreciação |
 | `YearsSinceRemod` | `YrSold − YearRemodAdd` | Captura valorização por atualização |
 | `WasRemodeled` | `YearRemodAdd != YearBuilt` | Flag binário de reforma |
-| `HasGarage` / `HasBasement` / `HasFireplace` | `feature > 0` | Presença/ausência tem impacto não-linear |
+| `IsNew` | `YrSold == YearBuilt` | Imóveis novos têm precificação distinta |
+| `HasGarage` / `HasBasement` / `HasFireplace` / `Has2ndFloor` / `HasPool` | `feature > 0` | Presença/ausência tem impacto não-linear |
 
 ### 5. Modelo: LightGBM
 
@@ -94,12 +96,27 @@ Dados (236 features)
 
 ---
 
+## Conclusão
+
+O modelo LightGBM atingiu **RMSLE de 0,12949** no Kaggle, estabelecendo uma base sólida para as próximas etapas da série (otimização de hiperparâmetros e modelo em produção).
+
+Os principais fatores que contribuíram para o resultado:
+
+- **Tratamento de NaN por grupo:** interpretar NaN como ausência da feature preservou a informação semântica do dataset
+- **Encoding ordinal:** manter a hierarquia natural das variáveis de qualidade permitiu ao modelo capturar gradações de valor
+- **Feature Engineering:** features compostas como `TotalSF`, `TotalBath` e os flags binários capturaram relações que as variáveis originais não representavam diretamente
+- **Transformação log1p no target:** reduziu a assimetria do `SalePrice` e alinhou o treino com a métrica RMSLE
+- **GridSearchCV com 5-fold CV:** seleção robusta de hiperparâmetros evitando overfitting ao conjunto de validação
+
+---
+
 ## Tecnologias
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
 ![LightGBM](https://img.shields.io/badge/LightGBM-02569B?style=flat)
 ![Pandas](https://img.shields.io/badge/Pandas-150458?style=flat&logo=pandas&logoColor=white)
 ![Scikit-learn](https://img.shields.io/badge/Scikit--learn-F7931E?style=flat&logo=scikit-learn&logoColor=white)
+
 ---
 
 *Juliana Burato — 2026*
